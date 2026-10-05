@@ -1,7 +1,20 @@
 ---
 name: wait-what
-description: "Stop. That last message did not land: re-pitch it."
+description: "Стоп. Последнее сообщение не дошло: изложи заново."
 disable-model-invocation: true
+metadata:
+  fork: RarogCmex/matt-pocock-skills
+  upstream: mattpocock/skills
+  localized_at: "2026-10-05"
+  local_edit: "перевод на русский: ASD-STE100 Simplified Technical English заменён на простой технический русский; единый язык проекта берётся по GLOSSARY.md / GLOSSARY-MAP.md"
 ---
 
-Wait, I don't understand where you've got to here. Re-pitch that: give me a little bit of context, talk in ASD-STE100 Simplified Technical English, and use the ubiquitous language from `GLOSSARY.md` (follow `GLOSSARY-MAP.md` to the right one if the repo has more than one).
+Стоп. Я не понимаю, как ты к этому пришёл. Изложи заново.
+
+Правила повторного изложения:
+
+1. Сначала — контекст: где мы находимся, что уже сделано, что осталось.
+2. Пиши простым техническим русским: короткие предложения, один термин — одно понятие, без жаргона и без сокращений, которые не расшифрованы.
+3. Одно утверждение — одно предложение. Без вложенных придаточных.
+4. Термины бери из единого языка проекта: `GLOSSARY.md`. Если репозиториев несколько — найди нужный по `GLOSSARY-MAP.md`.
+5. Если что-то осталось предположением — скажи это прямо, а не между делом.

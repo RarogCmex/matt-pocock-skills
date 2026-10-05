@@ -1,5 +1,5 @@
 interface:
-  display_name: "Wait What"
-  short_description: "Re-pitch that: simpler, with the context I'm missing"
+  display_name: "Стоп, не понял"
+  short_description: "Изложи заново: проще, с недостающим мне контекстом"
 policy:
   allow_implicit_invocation: false
