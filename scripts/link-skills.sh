@@ -13,7 +13,7 @@ set -euo pipefail
 # to keep installed skills up to date.
 #
 # FORK(RarogCmex): this copy diverges from upstream on purpose, and upstream
-# will not take the change (see the NOTE above). Three differences:
+# will not take the change (see the NOTE above). Four differences:
 #   1. `in-progress/` is NOT linked. The harness here is pi, which reads
 #      ~/.agents/skills directly, so a linked beta skill sits in the model's
 #      skill list on every task, not only when it is being reviewed.
@@ -22,10 +22,18 @@ set -euo pipefail
 #      this script) are removed, so re-running never resurrects them.
 #   3. Broken symlinks in pi's own layer (~/.pi/agent/skills) are pruned, since
 #      that layer points at ~/.agents/skills and would otherwise dangle.
+#   4. ~/.claude/skills is a destination only when the claude CLI is installed.
+#      Upstream links both unconditionally, which on a machine without Claude
+#      Code creates a directory that nothing reads.
 # Expect a conflict here on any sync that touches this file.
 
 REPO="$(cd "$(dirname "$0")/.." && pwd)"
-DESTS=("$HOME/.claude/skills" "$HOME/.agents/skills")
+# FORK: see difference 4 above. Kept as a probe rather than a hardcoded removal,
+# so installing Claude Code later brings the destination back by itself.
+DESTS=("$HOME/.agents/skills")
+if command -v claude >/dev/null 2>&1; then
+  DESTS=("$HOME/.claude/skills" "${DESTS[@]}")
+fi
 
 # Collect the repo's skills once, link into every destination. `deprecated/`
 # is retired, and `misc/` is kept around but rarely used and not promoted (see
