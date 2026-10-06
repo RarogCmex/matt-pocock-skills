@@ -6,8 +6,8 @@ metadata:
   fork: RarogCmex/matt-pocock-skills
   upstream: mattpocock/skills
   localized_at: "2026-10-05"
-  local_edit: "русский description + ссылка на скилл в терминах pi (Skill tool в pi нет)"
+  local_edit: "русский description + ссылка на скилл в терминах pi (Skill tool в pi нет); em-dash не используется"
 ---
 
-Прочитай скилл `grilling` по пути `~/.agents/skills/grilling/SKILL.md` — или вызови
-`/skill:grilling` — и веди допрос строго по нему.
+Прочитай скилл `grilling` по пути `~/.agents/skills/grilling/SKILL.md` (или вызови
+`/skill:grilling`) и веди допрос строго по нему.
