@@ -59,6 +59,8 @@ Each smell reads *what it is* → *how to fix*; match it against the diff:
 
 Issue both sub-agent calls together, in the foreground, and aggregate the reports they return.
 
+Write each brief in the language the user is writing in, and ask for the report in that language. The 400-word caps below are calibrated on English: in a language that runs longer, read them as roughly a fifth more.
+
 **Standards sub-agent prompt** should include:
 
 - The full diff command and commit list.
