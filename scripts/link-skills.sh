@@ -13,7 +13,7 @@ set -euo pipefail
 # to keep installed skills up to date.
 #
 # FORK(RarogCmex): this copy diverges from upstream on purpose, and upstream
-# will not take the change (see the NOTE above). Four differences:
+# will not take the change (see the NOTE above). Five differences:
 #   1. `in-progress/` is NOT linked. The harness here is pi, which reads
 #      ~/.agents/skills directly, so a linked beta skill sits in the model's
 #      skill list on every task, not only when it is being reviewed.
@@ -25,6 +25,10 @@ set -euo pipefail
 #   4. ~/.claude/skills is a destination only when the claude CLI is installed.
 #      Upstream links both unconditionally, which on a machine without Claude
 #      Code creates a directory that nothing reads.
+#   5. `scripts/language-rules.md` is installed into each harness's global
+#      instruction file between markers (see the tail of this script). The repo
+#      is deployed on several machines, so the language rules travel in git
+#      instead of being hand-pasted per machine.
 # Expect a conflict here on any sync that touches this file.
 
 REPO="$(cd "$(dirname "$0")/.." && pwd)"
@@ -117,4 +121,60 @@ if [ -d "$PI_SKILLS" ]; then
       echo "pruned broken link $(basename "$entry") ($PI_SKILLS)"
     fi
   done
+fi
+
+# FORK: the language rules live in git, not in each machine's dotfiles, because
+# this repo is deployed on more than one machine. They are installed into each
+# harness's global instruction file between markers, idempotently: re-running
+# replaces the block and never touches anything outside it.
+RULES="$REPO/scripts/language-rules.md"
+RULES_BEGIN="<!-- matt-pocock-skills:language-begin -->"
+RULES_END="<!-- matt-pocock-skills:language-end -->"
+RULES_DONE=0
+
+install_language_rules() {
+  target="$1"
+  [ -f "$RULES" ] || return 0
+  mkdir -p "$(dirname "$target")"
+  tmp="$(mktemp)"
+  if [ -f "$target" ] && grep -qF "$RULES_BEGIN" "$target"; then
+    awk -v b="$RULES_BEGIN" -v e="$RULES_END" -v src="$RULES" '
+      BEGIN { while ((getline line < src) > 0) block = block line "\n" }
+      $0 == b { print; printf "%s", block; inside = 1; next }
+      $0 == e { inside = 0 }
+      !inside { print }
+    ' "$target" > "$tmp"
+  else
+    if [ -s "$target" ]; then
+      cat "$target" >> "$tmp"
+      printf '\n' >> "$tmp"
+    fi
+    printf '%s\n' "$RULES_BEGIN" >> "$tmp"
+    cat "$RULES" >> "$tmp"
+    printf '%s\n' "$RULES_END" >> "$tmp"
+  fi
+  if cmp -s "$tmp" "$target"; then
+    echo "language rules already current ($target)"
+    rm -f "$tmp"
+  else
+    cp "$tmp" "$target"
+    rm -f "$tmp"
+    echo "language rules -> $target"
+  fi
+  RULES_DONE=$((RULES_DONE + 1))
+}
+
+# Only harnesses that are set up on this machine get a file. pi is keyed on its
+# agent dir, the other two on their CLI, matching the ~/.claude/skills rule above.
+if [ -d "$HOME/.pi/agent" ]; then
+  install_language_rules "$HOME/.pi/agent/AGENTS.md"
+fi
+if command -v claude >/dev/null 2>&1; then
+  install_language_rules "$HOME/.claude/CLAUDE.md"
+fi
+if command -v codex >/dev/null 2>&1; then
+  install_language_rules "$HOME/.codex/AGENTS.md"
+fi
+if [ "$RULES_DONE" -eq 0 ]; then
+  echo "no known harness instruction file on this machine; paste $RULES by hand"
 fi
