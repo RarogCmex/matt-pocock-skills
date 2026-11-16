@@ -30,6 +30,7 @@ bash scripts/link-skills.sh
 | `skills/engineering/code-review/SKILL.md` | One added sentence above the two sub-agent briefs: write the brief in the user's language and ask for the report in it; read the 400-word caps as roughly a fifth more in a language that runs longer. | Both briefs are literal English strings handed to a fresh sub-agent, so their language came from the text rather than from the conversation, and 400 words is an English calibration. |
 | `skills/engineering/improve-codebase-architecture/HTML-REPORT.md` | Two clauses: the tone section reads "plain, concise prose in the language the user is writing in" instead of "Plain English", and the six-word bullet cap gets the same fifth allowance. | "Plain English" names a language where the intent is plainness; a per-word cap is per-English-word. |
 | `skills/engineering/to-tickets/SKILL.md` | One clause: both slugs are ASCII Latin, transliterated when the title is not. | `.scratch/<feature-slug>/issues/<NN>-<slug>.md` built from a Russian title produced Cyrillic paths. |
+| `skills/engineering/setup-matt-pocock-skills/issue-tracker-local.md` | One bullet in the conventions list: `<feature-slug>`, `<slug>` and `<effort>` are ASCII Latin, transliterated when the title is not. | `to-spec` and `wayfinder` write their files through these conventions, so the rule has to live here too, not only in `to-tickets`. |
 | `skills/productivity/to-questionnaire/SKILL.md` | Same clause: the slug in `to-questionnaire-<slug>.md` is ASCII Latin. | Same reason. |
 | `skills/engineering/domain-modeling/ADR-FORMAT.md` | Same clause: the slug in `0001-slug.md` is ASCII Latin. | Same reason. |
 | `skills/productivity/teach/LEARNING-RECORD-FORMAT.md` | Same clause: the slug in `0001-slug.md` is ASCII Latin. | Same reason. |
@@ -62,7 +63,7 @@ the next sync does not reopen it.
 | `skills/engineering/wizard/template.sh` | Ships UTF-8 glyphs and `read -e` already, and no text handling depends on locale. |
 | Triage labels (`needs-triage`, `needs-info`, `ready-for-agent`) | They are identifiers for `gh`; translating them would break the commands. |
 | `docs/productivity/wait-what.md`, `README.md`, `ask-matt` saying "in plain English" | Human-facing prose. The model runs the skill body, which is edited separately. |
-| `skills/engineering/triage/OUT-OF-SCOPE.md` and the remaining slug templates | Its examples are English and short. Add the same one-clause rule there if a Cyrillic path ever shows up in practice. |
+| `skills/engineering/triage/OUT-OF-SCOPE.md` | Its examples are English and short, and the file name comes from a concept the user names rather than from a title. Add the same one-clause rule if a Cyrillic path ever shows up in practice. |
 | `.agents/writing-docs.md`, `AGENTS.md` in the parent repo | Repo conventions, not run-time instructions. |
 
 ## Verified
